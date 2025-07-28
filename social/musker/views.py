@@ -16,7 +16,22 @@ def profile_list(request):
 def profile(request, pk):
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user_id=pk)
-        return render(request, 'profile.html', {"profile": profile})
+        user_profile = UserProfile.objects.get(user=request.user)
+
+        # lógica para seguir ou deixar de seguir
+        if request.method == "POST":
+            action = request.POST.get('follow')
+            if action == "follow":
+                user_profile.follows.add(profile)
+            elif action == "unfollow":
+                user_profile.follows.remove(profile)
+            user_profile.save()
+            return redirect('profile', pk=pk)
+
+        return render(request, 'profile.html', {
+            "profile": profile,
+            "user_profile": user_profile
+        })
     else:
-        messages.success(request, ("Você precisa estar logado para visualizar esta página."))
+        messages.success(request, "Você precisa estar logado para visualizar esta página.")
         return redirect('home')
