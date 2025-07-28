@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h1>Publicações!</h1>
 
-<h1>Meeps!</h1>
+    {% for meep in meeps %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ meep.user.username }}</h5>
+            <p class="card-text">{{ meep.body }}</p>
+            <p class="card-text"><small class="text-muted">{{ meep.created_at|date:"d-m-Y H:i" }}</small></p>
+        </div>
+    </div>
+    {% empty %}
+        <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Nenhum Publicações ainda!</h5>
+            <p class="card-text">Siga pessoas para ver as Publicações deles.</p>
+        </div>
+    </div>
+    {% endfor %}
 {% endblock %}

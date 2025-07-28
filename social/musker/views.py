@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import UserProfile
+from .models import Meep, UserProfile
 
 def home(request):
-    return render(request, 'home.html', {})
+    if request.user.is_authenticated:
+        meeps = Meep.objects.all().order_by('-created_at')
+    return render(request, 'home.html', {"meeps":meeps})
 
 def profile_list(request):
     if request.user.is_authenticated:
@@ -17,6 +19,7 @@ def profile(request, pk):
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user_id=pk)
         user_profile = UserProfile.objects.get(user=request.user)
+        meeps = Meep.objects.filter(user_id=pk)
 
         # lógica para seguir ou deixar de seguir
         if request.method == "POST":
@@ -30,7 +33,8 @@ def profile(request, pk):
 
         return render(request, 'profile.html', {
             "profile": profile,
-            "user_profile": user_profile
+            "user_profile": user_profile,
+            "meeps": meeps
         })
     else:
         messages.success(request, "Você precisa estar logado para visualizar esta página.")

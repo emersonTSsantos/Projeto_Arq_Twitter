@@ -1,7 +1,22 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+# Create meep model
+class Meep(models.Model):
+    user = models.ForeignKey(User, related_name='meeps', on_delete=models.DO_NOTHING)
+    body = models.CharField(max_length=280)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        local_time = timezone.localtime(self.created_at)
+        return (
+            f"{self.user}" 
+            f"({self.created_at:%d-%m-%Y {local_time:%H:%M}}): "
+            f"{self.body}..."
+        )
 
 # Create A User Profile Model
 class UserProfile(models.Model):
