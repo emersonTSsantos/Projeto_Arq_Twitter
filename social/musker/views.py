@@ -5,6 +5,7 @@ from .forms import MeepForm, SignUpForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.contrib.auth.models import User
 
 def home(request):
     if request.user.is_authenticated:
@@ -97,3 +98,17 @@ def register_user(request):
             return redirect('home')
         
     return render(request, 'register.html', {'form': form})
+
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        form = SignUpForm(request.POST or None, instance=current_user)
+        if form.is_valid():
+            form.save()
+            login(request, current_user)  # Re-login to update session
+            messages.success(request, "Perfil atualizado com sucesso.")
+            return redirect('profile', pk=request.user.id)
+        return render(request, 'update_user.html', {'form': form})
+    else:
+        messages.success(request, "Você precisa estar logado para atualizar seu perfil.")
+        return redirect('home')

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<form class="container p-5 rounded" style="background: linear-gradient(135deg, #000000 0%, #f0f0f0 100%); max-width: 800px; margin: auto;" method="POST" action="{% url 'register' %}">
+    <h1 class="text-center text-white mb-5">Atualizar Perfil</h1>
+    {% csrf_token %}
+    {{ form.as_p}}
+
+    <button type="submit" class="btn btn-primary d-block mx-auto px-5">
+            <p class="mb-0" style="font-size: 1.2em;">
+                Atualizar Perfil
+            </p>
+    </button>
+</form>
+
+{% endblock %}
