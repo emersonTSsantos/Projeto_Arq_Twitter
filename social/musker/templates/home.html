@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 
 <div class="container text-center">
@@ -20,15 +20,22 @@
     <h1 class="mb-3">Publicações!</h1>
 
     {% for meep in meeps %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">@{{ meep.user.username }}</h5>
-                <p class="card-text">{{ meep.body }}</p>
+    <div class="card mb-3">
+        <div class="card-body d-flex align-items-center">
+            {% if meep.user.userprofile.profile_image %}
+                <img src="{{ meep.user.userprofile.profile_image.url }}" alt="{{ meep.user.username }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-right: 16px;">
+            {% else %}
+                <img src="{% static 'images/FotoDePefil.png' %}" alt="Imagem padrão" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-right: 16px;">
+            {% endif %}
+            <div style="flex: 1; min-width: 0;">
+                <h5 class="card-title mb-1">@{{ meep.user.username }}</h5>
+                <p class="card-text mb-1" style="word-break: break-word; white-space: pre-line;">{{ meep.body }}</p>
                 <p class="card-text">
                     <small class="text-muted">{{ meep.created_at|date:"d-m-Y H:i" }}</small>
                 </p>
             </div>
         </div>
+    </div>
     {% empty %}
         <div class="card mb-3">
             <div class="card-body">
