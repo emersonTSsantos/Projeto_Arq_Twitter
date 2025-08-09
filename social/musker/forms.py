@@ -1,10 +1,40 @@
 from django import forms
-from .models import Meep
+from .models import Meep, UserProfile
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+# filepath: c:\Users\emers\OneDrive\Documentos\Projeto_Arq_Twitter\social\musker\forms.py
+class UpdateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateUserForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Digite seu primeiro nome'
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Digite seu sobrenome'
+        })
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Digite seu email'
+        })
+
+class ProfilePicForm(forms.ModelForm):
+    profile_image = forms.ImageField(label="Foto de Perfil", required=False, widget=forms.ClearableFileInput(attrs={
+        'class': 'form-control'
+    }))
+
+    class Meta:
+        model = UserProfile
+        fields = ('profile_image', )
+
 class MeepForm(forms.ModelForm):
-    body = forms.CharField(required=True, widget=forms.Textarea(
+    body = forms.CharField(required=True, widget=forms.widgets.Textarea(
         attrs={
                 'class': "form-control", 
                 'placeholder': 'No que você está pensando?',
@@ -17,7 +47,7 @@ class MeepForm(forms.ModelForm):
 
     class Meta:
         model = Meep
-        exclude = ("user", "created_at", "updated_at")
+        exclude = ("user",)
 
 
 class SignUpForm(UserCreationForm):

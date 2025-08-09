@@ -5,35 +5,11 @@
 
 <div class="container text-center">
     <div class="row flex-column flex-md-row mt-5 mb-5 bg-light p-3 rounded shadow">
-        <div class="col-md-8 order-md-2 d-flex flex-column align-items-center gap-3">
-            <h1>Perfil do(a) @{{ profile.user.username }}!</h1>
-            <h2 class="mt-5">Publicações:</h2>
-            <br />
-            {% if meeps %}
-            {% for meep in meeps %}
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">{{ meep.user.username }}</h5>
-                    <p class="card-text">{{ meep.body }}</p>
-                    <p class="card-text"><small class="text-muted">{{ meep.created_at|date:"d-m-Y H:i" }}</small></p>
-                </div>
-            </div>
-            {% endfor %}
-            {% else %}
-            <div class="card ml-3 mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">Nenhum Publicação ainda!</h5>
-                    <p class="card-text">Siga outros usuários para ver as Publicações deles.</p>
-                </div>
-            </div>
-            {% endif %}
-        </div> 
-
         <div class="col-md-4 order-md-2 d-flex flex-column align-items-center gap-3">
             
             {% if profile.profile_image %}
-            <div class="card mb-3 mt-3 mx-auto" style="width: 13rem; cursor: pointer;">
-                <img src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}" class="card-img-top">
+            <div class="card mb-3 mt-3 mx-auto">
+                <img style="width: 13rem; cursor: pointer;" src="{{ profile.profile_image.url }}" alt="{{ profile.user.username }}" class="card-img-top">
             </div>
             {% endif %}
 
@@ -105,6 +81,30 @@
 
             {% if request.user.id == profile.user.id %}
             <a href="{% url 'update_user' %}" class="btn btn-outline-primary">Editar Perfil</a>
+            {% endif %}
+        </div>
+
+        <div class="col-md-8 order-md-2 d-flex flex-column align-items-center gap-3 mt-4">
+            <h1>Perfil do(a) @{{ profile.user.username }}!</h1>
+            <h2 class="mt-5">Publicações:</h2>
+            <br />
+            {% if meeps %}
+            {% for meep in meeps %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ meep.user.username }}</h5>
+                    <p class="card-text">{{ meep.body }}</p>
+                    <p class="card-text"><small class="text-muted">{{ meep.created_at|date:"d-m-Y H:i" }}</small></p>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="card ml-3 mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Nenhum Publicação ainda!</h5>
+                    <p class="card-text">Siga outros usuários para ver as Publicações deles.</p>
+                </div>
+            </div>
             {% endif %}
         </div>
     </div>

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Meep, UserProfile
-from .forms import MeepForm, SignUpForm
+from .forms import MeepForm, ProfilePicForm, SignUpForm, UpdateUserForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
@@ -102,13 +103,35 @@ def register_user(request):
 def update_user(request):
     if request.user.is_authenticated:
         current_user = User.objects.get(id=request.user.id)
-        form = SignUpForm(request.POST or None, instance=current_user)
-        if form.is_valid():
-            form.save()
+        profile_user = UserProfile.objects.get(user_id=request.user.id)
+        
+        #Get forms
+        user_form = SignUpForm(request.POST or None, request.FILES or None, instance=current_user)
+        profile_form = ProfilePicForm(request.POST or None, request.FILES or None, instance=profile_user)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
             login(request, current_user)  # Re-login to update session
             messages.success(request, "Perfil atualizado com sucesso.")
-            return redirect('profile', pk=request.user.id)
-        return render(request, 'update_user.html', {'form': form})
+            return redirect('home')
+        
+        return render(request, 'update_user.html', {'user_form': user_form, 'profile_form': profile_form})
     else:
         messages.success(request, "Você precisa estar logado para atualizar seu perfil.")
         return redirect('home')
+    
+@login_required
+def update_user(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = ProfilePicForm(request.POST, request.FILES, instance=request.user.userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Perfil atualizado com sucesso!')
+            return redirect('profile', request.user.id)
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = ProfilePicForm(instance=request.user.userprofile)
+    return render(request, 'update_user.html', {'user_form': user_form, 'profile_form': profile_form})
