@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Meep, UserProfile
 from .forms import MeepForm, ProfilePicForm, SignUpForm, UpdateUserForm
@@ -135,3 +135,11 @@ def update_user(request):
         user_form = UpdateUserForm(instance=request.user)
         profile_form = ProfilePicForm(instance=request.user.userprofile)
     return render(request, 'update_user.html', {'user_form': user_form, 'profile_form': profile_form})
+
+def meep_like(request, pk):
+    meep = get_object_or_404(Meep, id=pk)
+    if request.user in meep.likes.all():
+        meep.likes.remove(request.user)
+    else:
+        meep.likes.add(request.user)
+    return redirect('home')
