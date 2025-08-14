@@ -142,4 +142,4 @@ def meep_like(request, pk):
         meep.likes.remove(request.user)
     else:
         meep.likes.add(request.user)
-    return redirect('home')
+    return redirect(request.META.get('HTTP_REFERER'))
