@@ -40,14 +40,18 @@
                             {% if user in meep.likes.all %}
                             
                             {{ meep.likes.all|join:", " }}
-                            {{ meep.number_of_likes }}
+                            {% if meep.number_of_likes > 0 %}
+                                {{ meep.number_of_likes }}
+                            {% endif %}
 
                             <a style="text-decoration: none;" href="{% url 'meep_like' meep.id %}" title="Descurtir">
                                 <i class="fa-solid fa-heart" style="color: red; margin-right: 10px;"></i>
                             </a>
                             {% else %}
                                 {{ meep.likes.all|join:", " }}
-                                {{ meep.number_of_likes }}
+                                {% if meep.number_of_likes > 0 %}
+                                    {{ meep.number_of_likes }}
+                                {% endif %}
                                 
                                 <a style="text-decoration: none;" href="{% url 'meep_like' meep.id %}" title="Curtir">
                                     <i class="fa-regular fa-heart" style="color: red; margin-right: 10px;" ></i>
@@ -57,10 +61,10 @@
                             
                             <a style="text-decoration: none;" href="{% url 'meep_share' meep.id %}" title="Compartilhar">
                                     <i class="fa-solid fa-retweet"></i>
-                                    {% if not meep.shared_from %}
+                                    {% if not meep.shared_from and meep.number_of_shares > 0 %}
                                         {{ meep.number_of_shares }}
                                     {% endif %}
-                                </span>
+                                
                             </a>
                     </small>
 
