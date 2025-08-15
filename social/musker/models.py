@@ -10,6 +10,15 @@ class Meep(models.Model):
     body = models.CharField(max_length=280)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='meep_like', blank=True)
+    shared_from = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='shares')
+
+    @property
+    def number_of_shares(self):
+        return self.shares.count()
+
+    def __str__(self):
+        return f'{self.user.username}: {self.body[:30]}'
+    
 
     # Keep track or count of likes
     @property

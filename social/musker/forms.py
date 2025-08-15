@@ -47,7 +47,7 @@ class MeepForm(forms.ModelForm):
 
     class Meta:
         model = Meep
-        exclude = ("user", "likes",)
+        exclude = ("user", "likes", "shared_from")
 
 
 class SignUpForm(UserCreationForm):

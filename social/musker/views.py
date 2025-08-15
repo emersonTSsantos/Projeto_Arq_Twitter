@@ -143,3 +143,14 @@ def meep_like(request, pk):
     else:
         meep.likes.add(request.user)
     return redirect(request.META.get('HTTP_REFERER'))
+
+def meep_share(request, pk):
+    original_meep = get_object_or_404(Meep, id=pk)
+    if request.user.is_authenticated:
+        Meep.objects.create(
+            user=request.user,
+            body=original_meep.body,
+            shared_from=original_meep
+        )
+        messages.success(request, "Publicação compartilhada com sucesso.")
+    return redirect('home')
