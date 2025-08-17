@@ -117,6 +117,10 @@
                                             <i class="fa-regular fa-heart" style="color: red;"></i>
                                         </a>
                                     {% endif %}
+
+                                    {% if meep.shared_from %}
+                                        <div style="margin-left: 10px;" class="text-muted">Compartilhado de @{{ meep.shared_from.user.username }}</div>
+                                    {% endif %}
                                 
                                 </small>
                             </p>
